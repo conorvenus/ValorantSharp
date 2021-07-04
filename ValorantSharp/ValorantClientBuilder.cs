@@ -40,9 +40,34 @@ namespace ValorantSharp
 			return this;
 		}
 
-		public ValorantClientBuilder WithRegion(string glz, string xmpp, string xmppAuth)
+		public ValorantClientBuilder WithRegion(ValorantGLZRegion glz, ValorantXMPPRegion xmpp)
 		{
-			_region = new ValorantRegion() { GLZRegion = glz, XMPPRegion = xmpp, XMPPAuthRegion = xmppAuth };
+			string glzRegion = glz.ToString().ToLower();
+			string glzShard = (glzRegion == "latam" || glzRegion == "br") ? "na" : glzRegion;
+			Dictionary<string, string> xmppRegionDicts = new Dictionary<string, string>() {
+				{ "as2", "as2" },
+				{ "br1", "br" },
+				{ "eu1", "euw1" },
+				{ "eu2", "eun1" },
+				{ "eu3", "eu3" },
+				{ "jp1", "jp1" },
+				{ "kr1", "kr1" },
+				{ "la1", "la1" },
+				{ "la2", "la2" },
+				{ "na1", "na2" },
+				{ "oc1", "oc1" },
+				{ "pb1", "pbe1" },
+				{ "ru1", "ru1" },
+				{ "sa1", "sa1" },
+				{ "sa2", "sa2" },
+				{ "sa3", "sa3" },
+				{ "sa4", "sa4" },
+				{ "tr1", "tr1" },
+				{ "us2", "us2" },
+			};
+			string xmppAuthRegion = xmpp.ToString().ToLower().Replace("usbr1", "us-br1").Replace("usla2", "us-la2");
+			string xmppRegion = xmppRegionDicts[xmppAuthRegion];
+			_region = new ValorantRegion() { GLZRegion = glzRegion, GLZShard = glzShard, XMPPRegion = xmppRegion, XMPPAuthRegion = xmppAuthRegion };
 			return this;
 		}
 

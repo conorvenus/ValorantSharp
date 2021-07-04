@@ -216,11 +216,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp.Tests\\ValorantSharp.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp.Tests\\ValorantSharp.Tests.csproj",
       "projectName": "ValorantSharp.Tests",
-      "projectPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp.Tests\\ValorantSharp.Tests.csproj",
+      "projectPath": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp.Tests\\ValorantSharp.Tests.csproj",
       "packagesPath": "C:\\Users\\conor\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp.Tests\\obj\\",
+      "outputPath": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\conor\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -238,8 +238,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj": {
-              "projectPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj"
+            "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj": {
+              "projectPath": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj"
             }
           }
         }

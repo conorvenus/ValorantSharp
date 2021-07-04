@@ -136,7 +136,10 @@ namespace ValorantSharp
 				.ConfigureAwait(false);
 
 			if (!response.isSuccessful)
+			{
+				_logger.Error(response.Error);
 				throw new ValorantException(response.Error);
+			}
 
 			var _authResponse = (AuthResponse)response.Data;
 
@@ -148,7 +151,10 @@ namespace ValorantSharp
 				.ConfigureAwait(false);
 
 			if (!response.isSuccessful)
+			{
+				_logger.Error(response.Error);
 				throw new ValorantException(response.Error);
+			}
 
 			_logger.Debug("Successfully Authed with XMPP.");
 			_logger.Info($"[XMPP_READY] The Valorant XMPP services are now available for use.");

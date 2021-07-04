@@ -16,7 +16,7 @@ namespace ValorantSharp.Tests
 		{
 			valorantClient = new ValorantClientBuilder()
 				.WithCredentials("username", "password")
-				.WithRegion("eu", "ru1", "ru1")
+				.WithRegion(ValorantGLZRegion.EU, ValorantXMPPRegion.US2)
 				.WithCommandsPrefix("!")
 				.Build();
 

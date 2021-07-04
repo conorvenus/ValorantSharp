@@ -63,6 +63,8 @@ namespace ValorantSharp.API
 				.AddParameter("application/json", JObject.FromObject(authConfig), ParameterType.RequestBody));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.ErrorException.Message, isSuccessful = false };
+			else if (result.IsSuccessful && result.Content.Contains("error"))
+				return new ValorantResult() { Error = "Invalid credentials provided.", isSuccessful = false };
 			string AuthResponseURI = JObject.Parse(result.Content)["response"]["parameters"]["uri"].ToString();
 			string AccessToken = AuthResponseURI.Split("access_token=")[1].Split('&')[0];
 			string IDToken = AuthResponseURI.Split("id_token=")[1].Split('&')[0];

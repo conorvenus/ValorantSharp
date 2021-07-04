@@ -198,11 +198,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj",
+      "projectUniqueName": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj",
       "projectName": "ValorantSharp",
-      "projectPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj",
+      "projectPath": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj",
       "packagesPath": "C:\\Users\\conor\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\obj\\",
+      "outputPath": "C:\\Users\\conor\\Documents\\ValorantSharp\\ValorantSharp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\conor\\AppData\\Roaming\\NuGet\\NuGet.Config",
