@@ -1,0 +1,80 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj",
+        "projectName": "ValorantSharp",
+        "projectPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\ValorantSharp.csproj",
+        "packagesPath": "C:\\Users\\conor\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\conor\\source\\repos\\ValorantSharp\\ValorantSharp\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\conor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\conor\\Documents\\Fiddler2": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://www.myget.org/F/quahu/api/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.Bcl.AsyncInterfaces": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Qmmands": {
+              "target": "Package",
+              "version": "[4.0.0, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[106.11.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

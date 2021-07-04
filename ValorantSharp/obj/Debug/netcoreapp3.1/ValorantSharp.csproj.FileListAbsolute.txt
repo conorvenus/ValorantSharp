@@ -1,0 +1,9 @@
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\bin\Debug\netcoreapp3.1\ValorantSharp.deps.json
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\bin\Debug\netcoreapp3.1\ValorantSharp.dll
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\obj\Debug\netcoreapp3.1\ValorantSharp.AssemblyInfoInputs.cache
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\obj\Debug\netcoreapp3.1\ValorantSharp.AssemblyInfo.cs
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\bin\Debug\netcoreapp3.1\ValorantSharp.pdb
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\obj\Debug\netcoreapp3.1\ValorantSharp.csprojAssemblyReference.cache
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\obj\Debug\netcoreapp3.1\ValorantSharp.csproj.CoreCompileInputs.cache
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\obj\Debug\netcoreapp3.1\ValorantSharp.dll
+C:\Users\conor\source\repos\ValorantSharp\ValorantSharp\obj\Debug\netcoreapp3.1\ValorantSharp.pdb

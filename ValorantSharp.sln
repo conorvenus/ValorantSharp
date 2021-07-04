@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValorantSharp", "ValorantSharp\ValorantSharp.csproj", "{65A935FE-4478-4A1E-A526-5F430566EF2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValorantSharp.Tests", "ValorantSharp.Tests\ValorantSharp.Tests.csproj", "{B9183824-5B03-4F37-900C-88712F80993E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65A935FE-4478-4A1E-A526-5F430566EF2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65A935FE-4478-4A1E-A526-5F430566EF2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65A935FE-4478-4A1E-A526-5F430566EF2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65A935FE-4478-4A1E-A526-5F430566EF2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9183824-5B03-4F37-900C-88712F80993E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9183824-5B03-4F37-900C-88712F80993E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9183824-5B03-4F37-900C-88712F80993E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9183824-5B03-4F37-900C-88712F80993E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FD60DBB-FDBE-461C-A06A-2F2C02B23FDB}
+	EndGlobalSection
+EndGlobal
