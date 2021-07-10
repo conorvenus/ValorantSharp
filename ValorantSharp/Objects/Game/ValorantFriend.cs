@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using ValorantSharp.Enums;
-using ValorantSharp.XMPP;
+using ValorantSharp.Exceptions;
 
 namespace ValorantSharp.Objects.Game
 {
@@ -67,6 +67,9 @@ namespace ValorantSharp.Objects.Game
 
 		public async Task SendMessageAsync(string message)
 		{
+			if (message.Length > 1000)
+				throw new ValorantException("You can't send messages with over 1000 characters.");
+
 			await valClient.WriteXMLAsync(new XElement("message", new XAttribute("id", $"{DateTimeOffset.Now.ToUnixTimeMilliseconds()}:{messageId}"), new XAttribute("to", jid), new XAttribute("type", "chat"),
 												new XElement("body", message)));
 			messageId++;
