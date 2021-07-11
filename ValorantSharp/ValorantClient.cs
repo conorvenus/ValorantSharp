@@ -70,6 +70,8 @@ namespace ValorantSharp
 			_xmppClient = new ValorantXMPP(this, _logger, region, Friends);
 		}
 
+		public ValorantAPI GetAPIClient() { return _apiClient; }
+
 		public void AddModules(Assembly assembly)
 		{
 			_logger.Debug("Attempting to add Valorant command modules...");
