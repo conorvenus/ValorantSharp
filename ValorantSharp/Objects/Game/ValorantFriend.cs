@@ -52,6 +52,7 @@ namespace ValorantSharp.Objects.Game
 		{
 			if (FriendState == ValorantFriendState.Friends)
 			{
+				presence.partyClientVersion = await valClient.GetAPIClient().GetVersionAsync();
 				string presenceString = JsonConvert.SerializeObject(presence, Newtonsoft.Json.Formatting.Indented);
 				string encodedPresence = Convert.ToBase64String(Encoding.UTF8.GetBytes(presenceString));
 				await valClient.WriteXMLAsync(new XElement("presence", new XAttribute("id", $"presence_1"), new XAttribute("to", jid),

@@ -197,6 +197,7 @@ namespace ValorantSharp
 
 		public async Task SendPresenceAsync(ValorantPresence presence)
 		{
+			presence.partyClientVersion = await _apiClient.GetVersionAsync();
 			string presenceString = JsonConvert.SerializeObject(presence, Newtonsoft.Json.Formatting.Indented);
 			string encodedPresence = Convert.ToBase64String(Encoding.UTF8.GetBytes(presenceString));
 			await WriteXMLAsync(new XElement("presence", new XAttribute("id", $"presence_1"),
