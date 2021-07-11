@@ -75,16 +75,29 @@ namespace ValorantSharp.XMPP
 
 		internal async Task<XmlElement> ReceiveSingleXMLAsync()
 		{
-			return await Task.Run(() =>
+			return await Task.Run(async () =>
 			{
 				while (true)
 				{
 					if (_xmlParsedMessages.Count > 0 && _xmlParsedMessages[0] != null)
 					{
 						XmlDocument _document = new XmlDocument();
-						_document.LoadXml(_xmlParsedMessages[0]);
-						_xmlParsedMessages.RemoveAt(0);
-						return _document.DocumentElement;
+						try
+						{
+							_document.LoadXml(_xmlParsedMessages[0]);
+							_xmlParsedMessages.RemoveAt(0);
+							return _document.DocumentElement;
+						}
+						catch
+						{
+							_document.LoadXml("<root>" + _xmlParsedMessages[0] + "</root>");
+							foreach (XmlNode child in _document.DocumentElement.ChildNodes)
+							{
+								_xmlParsedMessages.Add(child.OuterXml);
+							}
+							_xmlParsedMessages.RemoveAt(0);
+							return await ReceiveSingleXMLAsync();
+						}
 					}
 				}
 			});
