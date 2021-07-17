@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
-using Qmmands;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Xml.Linq;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using Qmmands;
+using Newtonsoft.Json;
 using ValorantSharp.API;
+using ValorantSharp.XMPP;
 using ValorantSharp.Enums;
-using ValorantSharp.Exceptions;
 using ValorantSharp.Objects;
 using ValorantSharp.Objects.Auth;
 using ValorantSharp.Objects.Game;
-using ValorantSharp.XMPP;
+using ValorantSharp.Exceptions;
 
 namespace ValorantSharp
 {
@@ -198,7 +198,7 @@ namespace ValorantSharp
 		public async Task SendPresenceAsync(ValorantPresence presence)
 		{
 			presence.partyClientVersion = await _apiClient.GetVersionAsync();
-			string presenceString = JsonConvert.SerializeObject(presence, Newtonsoft.Json.Formatting.Indented);
+			string presenceString = JsonConvert.SerializeObject(presence, Formatting.Indented);
 			string encodedPresence = Convert.ToBase64String(Encoding.UTF8.GetBytes(presenceString));
 			await WriteXMLAsync(new XElement("presence", new XAttribute("id", $"presence_1"),
 								new XElement("show", "chat"),

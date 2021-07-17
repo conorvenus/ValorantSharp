@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ValorantSharp.Objects
+﻿namespace ValorantSharp.Objects
 {
 	public class ValorantResult
 	{

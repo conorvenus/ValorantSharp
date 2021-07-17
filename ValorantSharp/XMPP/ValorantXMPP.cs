@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Xml;
 using System.Xml.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using ValorantSharp.Enums;
 using ValorantSharp.Objects;
 using ValorantSharp.Objects.Auth;
