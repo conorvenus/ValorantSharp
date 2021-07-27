@@ -94,12 +94,12 @@ namespace ValorantSharp.API
 			_client.AddDefaultHeader("X-Riot-ClientVersion", _version);
 			string XMPPToken = await GetXMPPTokenAsync();
 			await GetPlayerIdAsync();
-			Contracts = new ContractEndpoints(_client, _pdBaseUrl);
-			CurrentGame = new CurrentGameEndpoints(_client, _glzBaseUrl);
-			PVP = new PvpEndpoints(_client, _pdBaseUrl, _riotSharedUrl, _region.GLZRegion);
-			Party = new PartyEndpoints(_client, _glzBaseUrl);
-			Pregame = new PregameEndpoints(_client, _glzBaseUrl);
-			Store = new StoreEndpoints(_client, _pdBaseUrl);
+			Contracts = new ContractEndpoints(_client, _pdBaseUrl, _playerId);
+			CurrentGame = new CurrentGameEndpoints(_client, _glzBaseUrl, _playerId);
+			PVP = new PvpEndpoints(_client, _pdBaseUrl, _riotSharedUrl, _region.GLZRegion, _playerId);
+			Party = new PartyEndpoints(_client, _glzBaseUrl, _playerId);
+			Pregame = new PregameEndpoints(_client, _glzBaseUrl, _playerId);
+			Store = new StoreEndpoints(_client, _pdBaseUrl, _playerId);
 			return new ValorantResult() { isSuccessful = true, Data = new AuthResponse() { AccessToken = AccessToken, EntitlementsJWT = EntitlementsToken, ExpiresIn = ExpiresIn, IdToken = IDToken, XMPPToken = XMPPToken } };
 		}
 
@@ -114,34 +114,37 @@ namespace ValorantSharp.API
 		}
 	}
 
+	
 	public class ContractEndpoints
     {
+		private string _playerId;
 		private string _pdBaseUrl;
 		private RestClient _client;
 
-		internal ContractEndpoints(RestClient client, string pdBaseUrl)
+		internal ContractEndpoints(RestClient client, string pdBaseUrl, string playerId)
         {
 			_client = client;
+			_playerId = playerId;
 			_pdBaseUrl = pdBaseUrl;
         }
 
 		public async Task<ValorantResult> FetchContractDefinitionsAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contract-definitions/v2/definitions", Method.GET)); https://github.com/techchrism/valorant-api-docs/tree/trunk/docs/PVP%20Endpoints
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contract-definitions/v2/definitions", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchContractsAsync(string playerId)
+		public async Task<ValorantResult> FetchContractsAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contracts/v1/contracts/{playerId}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contracts/v1/contracts/{_playerId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> ActivateContractAsync(string playerId, string contractId)
+		public async Task<ValorantResult> ActivateContractAsync(string contractId)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contracts/v1/contracts/{playerId}/special/{contractId}", Method.POST).AddJsonBody("{}"));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contracts/v1/contracts/{_playerId}/special/{contractId}", Method.POST).AddJsonBody("{}"));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -153,29 +156,25 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchItemUpgradesAsync()
-		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contract-definitions/v3/item-upgrades", Method.GET));
-			if (!result.IsSuccessful)
-				return new ValorantResult() { Error = result.Content, isSuccessful = false };
-			return new ValorantResult() { isSuccessful = true, Data = result.Content };
-		}
 	}
 
+	
 	public class CurrentGameEndpoints
     {
+		private string _playerId;
 		private string _glzBaseUrl;
 		private RestClient _client;
 
-		internal CurrentGameEndpoints(RestClient client, string glzBaseUrl)
+		internal CurrentGameEndpoints(RestClient client, string glzBaseUrl, string playerId)
 		{
 			_client = client;
+			_playerId = playerId;
 			_glzBaseUrl = glzBaseUrl;
 		}
 
-		public async Task<ValorantResult> FetchActiveMatchIdAsync(string playerId)
+		public async Task<ValorantResult> FetchActiveMatchIdAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/core-game/v1/players/{playerId}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/core-game/v1/players/{_playerId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -187,7 +186,7 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchMatchLoadoutsAsync(string matchId)
+		public async Task<ValorantResult> FetchActiveMatchLoadoutsAsync(string matchId)
 		{
 			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/core-game/v1/matches/{matchId}/loadouts", Method.GET));
 			if (!result.IsSuccessful)
@@ -208,28 +207,31 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> LeaveMatchAsync(string playerId, string matchId)
+		public async Task<ValorantResult> LeaveMatchAsync(string matchId)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/core-game/v1/players/{playerId}/disassociate/{matchId}", Method.POST).AddJsonBody("{}"));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/core-game/v1/players/{_playerId}/disassociate/{matchId}", Method.POST).AddJsonBody("{}"));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
 	}
 
+	
 	public class PvpEndpoints
     {
 		private string _region;
+		private string _playerId;
 		private string _pdBaseUrl;
 		private string _riotSharedUrl;
 		private RestClient _client;
 
-		internal PvpEndpoints(RestClient client, string pdBaseUrl, string riotSharedUrl, string region)
+		internal PvpEndpoints(RestClient client, string pdBaseUrl, string riotSharedUrl, string region, string playerId)
 		{
 			_client = client;
+			_region = region;
+			_playerId = playerId;
 			_pdBaseUrl = pdBaseUrl;
 			_riotSharedUrl = riotSharedUrl;
-			_region = region;
 		}
 
 		public async Task<ValorantResult> FetchGameContentAsync()
@@ -246,9 +248,9 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchPlayerLoadoutAsync(string playerId)
+		public async Task<ValorantResult> FetchPlayerLoadoutAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/personalization/v2/players/{playerId}/playerloadout", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/personalization/v2/players/{_playerId}/playerloadout", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -262,7 +264,7 @@ namespace ValorantSharp.API
 		}
 		public async Task<ValorantResult> FetchMatchHistoryAsync(string playerId, int startIndex, int endIndex, string queue = null)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/match-history/v1/history/{playerId}?startIndex={startIndex.ToString()}&endIndex={endIndex.ToString()}&queue={queue}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/match-history/v1/history/{playerId}?startIndex={startIndex}&endIndex={endIndex}" + queue == null ? null : "&queue=" + queue, Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -276,14 +278,14 @@ namespace ValorantSharp.API
 		}
 		public async Task<ValorantResult> FetchCompetitiveUpdatesAsync(string playerId, int startIndex, int endIndex, string queue = null)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/mmr/v1/players/{playerId}/competitiveupdates", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/mmr/v1/players/{playerId}/competitiveupdates?startIndex={startIndex}&endIndex={endIndex}" + queue == null ? null : "&queue=" + queue, Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchLeaderboardAsync(string seasonId, int startIndex = 0, int size = 510)
+		public async Task<ValorantResult> FetchLeaderboardAsync(string region, string seasonId, int startIndex = 0, int size = 510)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/mmr/v1/leaderboards/affinity/{_region}/queue/competitive/season/{seasonId}?startIndex={startIndex}&size={size}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/mmr/v1/leaderboards/affinity/{region}/queue/competitive/season/{seasonId}?startIndex={startIndex}&size={size}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -291,6 +293,13 @@ namespace ValorantSharp.API
 		public async Task<ValorantResult> FetchPlayerRestrictionsAsync()
 		{
 			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/restrictions/v2/penalties", Method.GET));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
+		public async Task<ValorantResult> FetchItemProgressionDefinitionsAsync()
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/contract-definitions/v3/item-upgrades", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -304,14 +313,17 @@ namespace ValorantSharp.API
 		}
 	}
 
+	
 	public class PartyEndpoints
     {
+		private string _playerId;
 		private string _glzBaseUrl;
 		private RestClient _client;
 
-		internal PartyEndpoints(RestClient client, string glzBaseUrl)
+		internal PartyEndpoints(RestClient client, string glzBaseUrl, string playerId)
 		{
 			_client = client;
+			_playerId = playerId;
 			_glzBaseUrl = glzBaseUrl;
 		}
 
@@ -331,14 +343,35 @@ namespace ValorantSharp.API
 		}
 		public async Task<ValorantResult> FetchPartyAsync(string partyId)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}", Method.DELETE));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> SetMemberReadyAsync(string playerId, string partyId, bool ready)
+		public async Task<ValorantResult> SetMemberReadyAsync(string partyId, bool ready)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/members/{playerId}/setReady", Method.POST).AddJsonBody($"{{\"ready\":{ready}}}"));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/members/{_playerId}/setReady", Method.POST).AddJsonBody($"{{\"ready\":{ready}}}"));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
+		public async Task<ValorantResult> RefreshCompetitiveTierAsync(string partyId, string playerId)
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/members/{playerId}/refreshCompetitiveTier", Method.POST).AddJsonBody("{}"));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
+		public async Task<ValorantResult> RefreshPlayerIdentityAsync(string partyId, string playerId)
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/members/{playerId}/refreshPlayerIdentity", Method.POST).AddJsonBody("{}"));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
+		public async Task<ValorantResult> RefreshPartyPingsAsync(string partyId, string playerId)
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/members/{playerId}/refreshPings", Method.POST).AddJsonBody("{}"));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -371,8 +404,9 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> SetPartyAccessibilityAsync(string partyId, string accessibility)
+		public async Task<ValorantResult> SetPartyAccessibilityAsync(string partyId, bool open)
 		{
+			string accessibility = open ? "OPEN" : "CLOSED";
 			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/accessibility", Method.POST).AddJsonBody($"{{\"accessibility\":\"{accessibility}\"}}"));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
@@ -387,14 +421,15 @@ namespace ValorantSharp.API
 		}
 		public async Task<ValorantResult> InviteToPartyAsync(string partyId, string name, string tag)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/invites/name/{name}/tag/{tag}", Method.POST).AddJsonBody("{}"));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/invites/name/{name}/tag/{tag}", Method.POST).AddJsonBody(""));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> RequestToJoinPartyAsync(string partyId)
+		public async Task<ValorantResult> RequestToJoinPartyAsync(string partyId, string playerId)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/request", Method.POST).AddJsonBody("{}"));
+			string[] playerIds = new string[1] { playerId };
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/request", Method.POST).AddJsonBody($"{{\"Subjects\":{playerIds}}}"));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -402,6 +437,20 @@ namespace ValorantSharp.API
 		public async Task<ValorantResult> DeclineRequestToJoinPartyAsync(string partyId, string requestId)
 		{
 			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/parties/{partyId}/request/{requestId}/decline", Method.POST).AddJsonBody("{}"));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
+		public async Task<ValorantResult> JoinPartyAsync(string partyId)
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/players/{_playerId}/joinparty/{partyId}", Method.POST).AddJsonBody("{}"));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
+		public async Task<ValorantResult> LeavePartyAsync(string partyId)
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/parties/v1/players/{_playerId}/leaveparty/{partyId}", Method.POST).AddJsonBody("{}"));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -429,20 +478,23 @@ namespace ValorantSharp.API
 		}
 	}
 
+	
 	public class PregameEndpoints
     {
+		private string _playerId;
 		private string _glzBaseUrl;
 		private RestClient _client;
 
-		internal PregameEndpoints(RestClient client, string glzBaseUrl)
+		internal PregameEndpoints(RestClient client, string glzBaseUrl, string playerId)
 		{
 			_client = client;
+			_playerId = playerId;
 			_glzBaseUrl = glzBaseUrl;
 		}
 
-		public async Task<ValorantResult> FetchPregameIdAsync(string playerId)
+		public async Task<ValorantResult> FetchPregameIdAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/pregame/v1/players/{playerId}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/pregame/v1/players/{_playerId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -489,14 +541,23 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
+		public async Task<ValorantResult> PregameLeaveMatchAsync(string matchId)
+		{
+			var result = await _client.ExecuteAsync(new RestRequest($"{_glzBaseUrl}/pregame/v1/matches/{matchId}/quit", Method.POST).AddJsonBody("{}"));
+			if (!result.IsSuccessful)
+				return new ValorantResult() { Error = result.Content, isSuccessful = false };
+			return new ValorantResult() { isSuccessful = true, Data = result.Content };
+		}
 	}
 
+	
 	public class StoreEndpoints
     {
+		private string _playerId;
 		private string _pdBaseUrl;
 		private RestClient _client;
 
-		internal StoreEndpoints(RestClient client, string pdBaseUrl)
+		internal StoreEndpoints(RestClient client, string pdBaseUrl, string playerId)
 		{
 			_client = client;
 			_pdBaseUrl = pdBaseUrl;
@@ -509,16 +570,16 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchStorefrontAsync(string playerId)
+		public async Task<ValorantResult> FetchStorefrontAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/store/v2/storefront/{playerId}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/store/v2/storefront/{_playerId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchWalletAsync(string playerId)
+		public async Task<ValorantResult> FetchWalletAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/store/v1/wallet/{playerId}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/store/v1/wallet/{_playerId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -530,9 +591,9 @@ namespace ValorantSharp.API
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
 		}
-		public async Task<ValorantResult> FetchEntitlementsAsync(string playerId)
+		public async Task<ValorantResult> FetchEntitlementsAsync()
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/store/v1/entitlements/{playerId}", Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/store/v1/entitlements/{_playerId}", Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
