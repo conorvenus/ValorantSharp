@@ -264,7 +264,7 @@ namespace ValorantSharp.API
 		}
 		public async Task<ValorantResult> FetchMatchHistoryAsync(string playerId, int startIndex, int endIndex, string queue = null)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/match-history/v1/history/{playerId}?startIndex={startIndex}&endIndex={endIndex}" + queue == null ? null : "&queue=" + queue, Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/match-history/v1/history/{playerId}?startIndex={startIndex}&endIndex={endIndex}" + (queue == null ? null : "&queue=" + queue), Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
@@ -278,7 +278,7 @@ namespace ValorantSharp.API
 		}
 		public async Task<ValorantResult> FetchCompetitiveUpdatesAsync(string playerId, int startIndex, int endIndex, string queue = null)
 		{
-			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/mmr/v1/players/{playerId}/competitiveupdates?startIndex={startIndex}&endIndex={endIndex}" + queue == null ? null : "&queue=" + queue, Method.GET));
+			var result = await _client.ExecuteAsync(new RestRequest($"{_pdBaseUrl}/mmr/v1/players/{playerId}/competitiveupdates?startIndex={startIndex}&endIndex={endIndex}" + (queue == null ? null : "&queue=" + queue), Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
 			return new ValorantResult() { isSuccessful = true, Data = result.Content };
