@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ValorantSharp.Objects.Game
+﻿namespace ValorantSharp.Objects.Game
 {
 	public class ValorantUser
 	{

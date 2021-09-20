@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Reflection;
 using ValorantSharp.Enums;
 using ValorantSharp.Objects.Game;
 
@@ -26,6 +24,10 @@ namespace ValorantSharp.Tests
 			valorantClient.Ready += Ready;
 
 			await valorantClient.LoginAsync();
+
+			var valorantApiClient = valorantClient.GetAPIClient();
+			var storefront = await valorantApiClient.Store.FetchStorefrontAsync();
+			Console.WriteLine((string)storefront.Data);
 
 			await Task.Delay(-1);
 		}

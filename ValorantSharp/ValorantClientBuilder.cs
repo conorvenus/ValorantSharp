@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ValorantSharp.Enums;
 using ValorantSharp.Exceptions;
 using ValorantSharp.Objects;
@@ -40,6 +38,13 @@ namespace ValorantSharp
 			return this;
 		}
 
+		public ValorantClientBuilder WithRegion(ValorantGLZRegion glz)
+		{
+			string glzRegion = glz.ToString().ToLower();
+			string glzShard = (glzRegion == "latam" || glzRegion == "br") ? "na" : glzRegion;
+			_region = new ValorantRegion() { GLZRegion = glzRegion, GLZShard = glzShard };
+			return this;
+		}
 		public ValorantClientBuilder WithRegion(ValorantGLZRegion glz, ValorantXMPPRegion xmpp)
 		{
 			string glzRegion = glz.ToString().ToLower();

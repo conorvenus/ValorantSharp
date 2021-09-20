@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
-using Qmmands;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Xml.Linq;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using Qmmands;
+using Newtonsoft.Json;
 using ValorantSharp.API;
+using ValorantSharp.XMPP;
 using ValorantSharp.Enums;
-using ValorantSharp.Exceptions;
 using ValorantSharp.Objects;
 using ValorantSharp.Objects.Auth;
 using ValorantSharp.Objects.Game;
-using ValorantSharp.XMPP;
+using ValorantSharp.Exceptions;
 
 namespace ValorantSharp
 {
@@ -148,30 +148,33 @@ namespace ValorantSharp
 			_logger.Debug("Successfully Authed with REST.");
 			_logger.Info($"[REST_READY] The Valorant REST API is now available for use.");
 
-			response = await _xmppClient
+			if(region.XMPPAuthRegion != null && region.XMPPRegion != null)
+            {
+				response = await _xmppClient
 				.AuthAsync(_authResponse)
 				.ConfigureAwait(false);
 
-			if (!response.isSuccessful)
-			{
-				_logger.Error(response.Error);
-				throw new ValorantException(response.Error);
+				if (!response.isSuccessful)
+				{
+					_logger.Error(response.Error);
+					throw new ValorantException(response.Error);
+				}
+
+				_logger.Debug("Successfully Authed with XMPP.");
+				_logger.Info($"[XMPP_READY] The Valorant XMPP services are now available for use.");
+
+				await SendPresenceAsync(new ValorantPresence()
+				{
+					partySize = 2,
+					queueId = "ValorantBot",
+					sessionLoopState = "INGAME",
+					partyOwnerSessionLoopState = "INGAME",
+					partyOwnerMatchScoreAllyTeam = 24,
+					partyOwnerMatchScoreEnemyTeam = 7,
+					accountLevel = 9999,
+					playerCardId = "9fb348bc-41a0-91ad-8a3e-818035c4e561"
+				});
 			}
-
-			_logger.Debug("Successfully Authed with XMPP.");
-			_logger.Info($"[XMPP_READY] The Valorant XMPP services are now available for use.");
-
-			await SendPresenceAsync(new ValorantPresence()
-			{
-				partySize = 2,
-				queueId = "ValorantBot",
-				sessionLoopState = "INGAME",
-				partyOwnerSessionLoopState = "INGAME",
-				partyOwnerMatchScoreAllyTeam = 24,
-				partyOwnerMatchScoreEnemyTeam = 7,
-				accountLevel = 9999,
-				playerCardId = "9fb348bc-41a0-91ad-8a3e-818035c4e561"
-			});
 
 			if (Ready != null)
 			{
@@ -198,7 +201,7 @@ namespace ValorantSharp
 		public async Task SendPresenceAsync(ValorantPresence presence)
 		{
 			presence.partyClientVersion = await _apiClient.GetVersionAsync();
-			string presenceString = JsonConvert.SerializeObject(presence, Newtonsoft.Json.Formatting.Indented);
+			string presenceString = JsonConvert.SerializeObject(presence, Formatting.Indented);
 			string encodedPresence = Convert.ToBase64String(Encoding.UTF8.GetBytes(presenceString));
 			await WriteXMLAsync(new XElement("presence", new XAttribute("id", $"presence_1"),
 								new XElement("show", "chat"),
