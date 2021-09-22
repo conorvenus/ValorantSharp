@@ -68,7 +68,7 @@ namespace ValorantSharp.API
 			_client.CookieContainer = new CookieContainer();
 			await GetVersionAsync();
 			var result = await _client.ExecuteAsync(
-				new RestRequest($"{_riotAuthUrl}/authorize?client_id=play-valorant-web-prod&response_type=token%20id_token&redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in%2F%3Fredirect%3D%2Fdownload%2F",
+				new RestRequest($"{_riotAuthUrl}/authorize?client_id=play-valorant-web-prod&response_type=token%20id_token&redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in%2F%3Fredirect%3D%2Fdownload%2F&nonce=1",
 								Method.GET));
 			if (!result.IsSuccessful)
 				return new ValorantResult() { Error = result.Content, isSuccessful = false };
